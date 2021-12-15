@@ -1,4 +1,4 @@
 exports.MAILGUN = {
-    user:" postmaster@sandbox28903ca5399940309f14387649d274e7.mailgun.org",
-    pass:"46ad45ff3d3e1effb47d695a112a1cb5-7dcc6512-c9afa2fe"
-}
+    user: " sandbox261f038e966749fea3c7a95334fbfe0a.mailgun.org",
+    pass: "339f0b9f8824f4ddbf37673d8232bebe-8ed21946-d9360ce1"
+} 

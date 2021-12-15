@@ -7,6 +7,8 @@ const { TokenUser } = require("./api/Token")
 const { register, login, Resend, ForgotPassword } = require("./api/user")
 const { API_URL } = require("./config/api")
 const { db } = require("./config/mysql")
+const bodyParser = require('body-parser')
+const cors = require('cors')
 
 //create the connection
 //Third, call the connect() method on the connection object to connect to the MySQL database server:
@@ -21,8 +23,13 @@ const PORT = 9000;
 
 app.listen(PORT, () => console.log('😛  Server started on port  :  ', PORT))
 
+
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(cors())
+app.use(express.json())
 // User API
-app.get(`${API_URL.user}/register`, register)
+app.post(`${API_URL.user}/register`, register)
 
 // User   login   API
 app.get(`${API_URL.user}/login`, login)
@@ -43,7 +50,7 @@ app.get(`/${API_URL.auth}/verify/:userEmail/code/:emailToken`, TokenUser)
 app.get(`/${API_URL.auth}/resend/:userEmail/resend-code/:emailToken`, Resend)
 
 // forgot Password API
-app.get(`${API_URL.user}/Forgot-Password/:userEmail` , ForgotPassword )
+app.get(`${API_URL.user}/Forgot-Password/:userEmail`, ForgotPassword)
 
 // Reset Password path 
 app.get(`/${API_URL.auth}/Reset-Password/:userEmail/code/:emailToken`, ResetPassword)

@@ -1,8 +1,9 @@
 class UserModal {
-    constructor(firstname = "",
+    constructor(
+        firstname = "",
         lastname = "",
-        avatar_url = "",
         username = "",
+        avatar_url = "",
         password = "",
         isVerified = false,
         emailToken = "",
@@ -17,7 +18,7 @@ class UserModal {
         this.emailToken = emailToken
 
     }
-        setVerified = (isVerified) => this.isVerified = isVerified
-        setMailToken = (emailToken) => this.emailToken = emailToken
+    setVerified = (isVerified) => this.isVerified = isVerified
+    setMailToken = (emailToken) => this.emailToken = emailToken
 }
 exports.UserModal = UserModal

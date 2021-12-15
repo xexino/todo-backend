@@ -22,17 +22,18 @@ async function CompairePassword(password, password_hash) {
 CompairePassword("Pass1as234"); // test the async function
 // register user
 
+
+
 exports.register = (req, resp) => {
 
-    //verifier if the username is alread used
 
     //new object  Fetch data from req
-    let newUser = new UserModal("yarbi tsda9",
-        "test",
-        "http://assets.stickpng.com/thumbs/580b585b2edbce24c47b2a59.png",
-        "aymanachraf890@gmail.com",
-        "Pass1as234"
-    )
+    let newUser = new UserModal(
+        req.body.Firstname,
+        req.body.Lastname,
+        req.body.Username,
+        req.body.Avatar_Url,
+        req.body.Password)
 
     //VALIDATE DATAs
 
@@ -66,6 +67,8 @@ exports.register = (req, resp) => {
         else {
             console.log(resQ)
             if (resQ.length > 0) {
+                //verifier if the username is alread used
+
                 resp.send(" <h1 style =' color : red'>   " + newUser.username + "   Alredy exist")
             }
             else {
@@ -106,6 +109,7 @@ exports.register = (req, resp) => {
                     else {
                         console.log(resQ)
                         resp.statuCode = 201
+                        console.log(resQ);
                         resp.send(" <h1 style= 'color : red '> Please check your email  " + newUser.username + "  to verify your account </h1>")
                     }
                 })
@@ -216,9 +220,9 @@ exports.ForgotPassword = (req, resp) => {
                     const secretToken = randomString.generate()
 
                     db.query(` UPDATE USERS SET SENDMAILDATE= NOW() , emailToken ='${secretToken}' 
-                              WHERE username = '${req.params.userEmail}' `, (err,resQ) => {
+                              WHERE username = '${req.params.userEmail}' `, (err, resQ) => {
 
-                        if(err) throw err
+                        if (err) throw err
                         else {
                             const mailOptions = {
                                 from: "todoApp@gmc.com",
@@ -228,7 +232,7 @@ exports.ForgotPassword = (req, resp) => {
                             <h1>This mail will expire in 24 hour</h1>
                             <a href="http://localhost:9000/auth/Reset-Password/${req.params.userEmail}/code/${secretToken}">change your password:) </a>`
                             }
-    
+
                             resp.send("verify ur email")
                             transport.sendMail(mailOptions, (err, info) => {
                                 if (err) throw err
@@ -237,7 +241,7 @@ exports.ForgotPassword = (req, resp) => {
                                 }
                             })
                         }
-                     
+
                     })
 
                 }
