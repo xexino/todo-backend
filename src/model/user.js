@@ -8,7 +8,7 @@ class UserModal {
         isVerified = false,
         emailToken = "",
         id = null) {
-        this.id = firstname
+        this.firstname = firstname
         this.lastname = lastname
         this.avatar_url = avatar_url
         this.username = username

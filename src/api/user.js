@@ -1,5 +1,5 @@
 
-const { APP } = require("../app");
+
 const { db } = require("../config/mysql");
 const { Creedantials } = require("../model/cridantals");
 const { UserModal } = require("../model/user");
@@ -26,14 +26,15 @@ CompairePassword("Pass1as234"); // test the async function
 
 exports.register = (req, resp) => {
 
+    console.log(req.body);
 
     //new object  Fetch data from req
     let newUser = new UserModal(
-        req.body.Firstname,
-        req.body.Lastname,
-        req.body.Username,
-        req.body.Avatar_Url,
-        req.body.Password)
+        req.body.firstName,
+        req.body.lastName,
+        req.body.userName,
+        req.body.avatar_url,
+        req.body.password)
 
     //VALIDATE DATAs
 
@@ -43,20 +44,22 @@ exports.register = (req, resp) => {
 
     if (!passwordPatern.test(password)) {
 
-        resp.send(" <h1 style =' color : blue' > " + "password should be at least 8  and  max 12")
+        return resp.status(400).json({ message: 'invalid password' })
 
-        return
     }
 
     let usernamePattern = /^.{4,30}$/
 
     if (!usernamePattern.test(username)) {
-        resp.send(" <h1 style =' color : red' > " + "username should be at least 4  and  max 12 </h1>")
-        return
+        return resp.status(400).json({ message: 'invalid email' })
+
     }
-    if (newUser.lastname.length < 4 || newUser.lastname.length > 12) {
-        resp.send(" <h1 style =' color : orange' > " + "lastname should be at least 8  and  max 12 </h1>")
-        return
+    let lastnamePattern = /^.{4,30}$/
+
+
+    if (!lastnamePattern.test(lastname)) {
+        return resp.status(400).json({ message: 'invalid Lastname ' })
+
     }
 
     db.query(`
@@ -69,7 +72,8 @@ exports.register = (req, resp) => {
             if (resQ.length > 0) {
                 //verifier if the username is alread used
 
-                resp.send(" <h1 style =' color : red'>   " + newUser.username + "   Alredy exist")
+                return resp.status(400).json({ message: 'user already exist ' })
+
             }
             else {
                 //Create sql table for the new user
@@ -119,9 +123,11 @@ exports.register = (req, resp) => {
 }
 
 exports.login = (req, resp) => {
+
     let creedantials = new Creedantials(
-        "ariyon.mohammad@logdots.com",
-        "Pass1as234"
+        req.body.username,
+        req.body.password
+
     )
     //search user by username and password
 
@@ -135,14 +141,16 @@ exports.login = (req, resp) => {
             console.log(resQ)
 
             if (resQ === 0) {
-                resp.send("user not fount try again ! 🏀")
+                return resp.status(400).json({ message: 'user do not exist ' })
+
             }
             else {
                 if (CompairePassword(creedantials.password, resQ[0]?.password)) {
                     resp.statuCode = 200
                     resp.send("hello hello again welcome on our new test")
                 }
-                else resp.send("EROOR")
+                else return resp.status(400).json({ message: 'emaeil or password are wrong' })
+
 
             }
         }
@@ -201,39 +209,43 @@ exports.ForgotPassword = (req, resp) => {
 
     let usernamePattern = /^.{4,30}$/
 
-    if (!usernamePattern.test(req.params.userEmail)) {
-        resp.send(" <h1 style ='color:red';'text-align : center'; > Username Invalid </h1>")
-        return
+    if (!usernamePattern.test(req.body.username)) {
+        // resp.send(" <h1 style ='color:red';'text-align : center'; > Username Invalid </h1>")
+        // return
+        return resp.status(400).json({ message: 'invalid Email' })
+
     }
+    console.log(req.body.username)
 
     db.query(`  SELECT * FROM USERS 
-                WHERE  username='${req.params.userEmail}' `
+                WHERE  username='${req.body.username}' `
         , (err, resQ) => {
             if (err) throw err
             else {
                 console.log(resQ)
-                if (resQ.length === 0) {
-                    resp.send(" <h1 style =' color : red'> This username do not exist please try to register")
+                if (resQ.length == 0) {
+                    // resp.send(" <h1 style =' color : red'> This username do not exist please try to register")
+                    return resp.status(400).json({ message: 'This username do not exist please try to register' })
                 }
                 else {
                     //generate Token for the user 
                     const secretToken = randomString.generate()
 
                     db.query(` UPDATE USERS SET SENDMAILDATE= NOW() , emailToken ='${secretToken}' 
-                              WHERE username = '${req.params.userEmail}' `, (err, resQ) => {
+                              WHERE username = '${req.body.username}' `, (err, resQ) => {
 
                         if (err) throw err
                         else {
                             const mailOptions = {
                                 from: "todoApp@gmc.com",
-                                to: req.params.userEmail,
+                                to: req.body.username,
                                 subject: "Reset your password",
                                 html: `
                             <h1>This mail will expire in 24 hour</h1>
-                            <a href="http://localhost:9000/auth/Reset-Password/${req.params.userEmail}/code/${secretToken}">change your password:) </a>`
+                            <a href="http://localhost:3000/auth/Reset-Password/${req.body.username}/code/${secretToken}">change your password:) </a>`
                             }
 
-                            resp.send("verify ur email")
+                            resp.status(400).json({ message: 'please check your mail box' })
                             transport.sendMail(mailOptions, (err, info) => {
                                 if (err) throw err
                                 else {

@@ -32,7 +32,7 @@ app.use(express.json())
 app.post(`${API_URL.user}/register`, register)
 
 // User   login   API
-app.get(`${API_URL.user}/login`, login)
+app.post(`${API_URL.user}/login`, login)
 
 // Todo API
 app.get(`${API_URL.user}/:uuserid${API_URL.todo}/add`, addTodo)
@@ -50,7 +50,7 @@ app.get(`/${API_URL.auth}/verify/:userEmail/code/:emailToken`, TokenUser)
 app.get(`/${API_URL.auth}/resend/:userEmail/resend-code/:emailToken`, Resend)
 
 // forgot Password API
-app.get(`${API_URL.user}/Forgot-Password/:userEmail`, ForgotPassword)
+app.post(`${API_URL.user}/Forgot-Password/:userEmail`, ForgotPassword)
 
 // Reset Password path 
-app.get(`/${API_URL.auth}/Reset-Password/:userEmail/code/:emailToken`, ResetPassword)
+app.post(`/${API_URL.auth}/Reset-Password/:userEmail/code/:emailToken`, ResetPassword)

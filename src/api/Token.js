@@ -35,8 +35,8 @@ exports.TokenUser = (req, resp) => {
         //verify the date of the token if it expired or not
         let currentdate = new Date(Date.now())
         console.log(currentdate.getTime())
-       
-       
+
+
         if (currentdate.getTime() > resQQ[0].dateUser.getTime() + 6000000) {
           db.query(`  UPDATE USERS SET isVerified = 1  , emailToken=''
                   WHERE username='${req.params.userEmail}'

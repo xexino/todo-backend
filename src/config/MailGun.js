@@ -1,4 +1,6 @@
 exports.MAILGUN = {
-    user: " sandbox261f038e966749fea3c7a95334fbfe0a.mailgun.org",
-    pass: "339f0b9f8824f4ddbf37673d8232bebe-8ed21946-d9360ce1"
-} 
+    user: "90b3c92c694923",
+    pass: "fbf953f5506759"
+}
+// Username: postmaster@sandbox261f038e966749fea3c7a95334fbfe0a.mailgun.org
+// Default password: 9072faf53f7250bdb7c1e0555363b9b3-8ed21946-628fa620
